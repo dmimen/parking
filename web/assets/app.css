@@ -73,3 +73,13 @@ body {
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
     margin-bottom: 10px;
 }
+
+@media (max-width: 1024px) {
+    .navbar .container-xl {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+    .card {
+        border-radius: 12px;
+    }
+}

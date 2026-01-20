@@ -20,7 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.querySelector('[data-car-search]');
     const searchIndicator = document.querySelector('[data-search-indicator]');
     const resultsBox = document.querySelector('[data-search-results]');
-    if (searchInput && resultsBox) {
+    const tableBody = document.querySelector('[data-car-results]');
+    const table = tableBody ? tableBody.closest('table') : null;
+    const hasAdminColumns = table?.dataset.adminColumns === '1';
+    const hasActions = table?.dataset.actions === '1';
+    const defaultRows = tableBody ? tableBody.innerHTML : '';
+    if (searchInput && resultsBox && tableBody) {
         const runSearch = debounce(() => {
             const query = searchInput.value.trim();
             if (searchIndicator) {
@@ -28,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (!query) {
                 resultsBox.innerHTML = '';
+                tableBody.innerHTML = defaultRows;
                 return;
             }
             const xhr = new XMLHttpRequest();
@@ -39,10 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (xhr.status >= 300 && xhr.status < 400) {
                     resultsBox.innerHTML = '<div class="text-muted">Требуется повторный вход</div>';
+                    tableBody.innerHTML = defaultRows;
                     return;
                 }
                 if (xhr.status !== 200) {
                     resultsBox.innerHTML = '<div class="text-muted">Ошибка загрузки поиска</div>';
+                    tableBody.innerHTML = defaultRows;
                     return;
                 }
                 let data = null;
@@ -50,10 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     data = JSON.parse(xhr.responseText);
                 } catch (error) {
                     resultsBox.innerHTML = '<div class="text-muted">Ошибка обработки ответа</div>';
+                    tableBody.innerHTML = defaultRows;
                     return;
                 }
                 if (!data.results || !data.results.length) {
                     resultsBox.innerHTML = '<div class="text-muted">Ничего не найдено</div>';
+                    tableBody.innerHTML = '';
                     return;
                 }
                 resultsBox.innerHTML = data.results.map(row => `
@@ -62,6 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="text-muted small">${row.car_model} • ${row.date_added}</div>
                         <div class="small">${row.comment || 'Без комментария'}</div>
                     </div>
+                `).join('');
+                tableBody.innerHTML = data.results.map(row => `
+                    <tr>
+                        <td>${row.car_number}</td>
+                        <td>${row.car_model}</td>
+                        <td>${row.comment || ''}</td>
+                        <td>${row.date_added}</td>
+                        ${hasAdminColumns ? '<td>—</td>' : ''}
+                        ${hasActions ? '<td class="text-end">—</td>' : ''}
+                    </tr>
                 `).join('');
             };
             xhr.send();
