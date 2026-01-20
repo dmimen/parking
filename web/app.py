@@ -162,7 +162,6 @@ def index():
 
 
 @app.route("/login", methods=["GET", "POST"])
-@app.route("/login.php", methods=["GET", "POST"])
 def login():
     message = ""
     if request.method == "POST":
@@ -200,7 +199,6 @@ def login():
 
 
 @app.route("/otp", methods=["GET", "POST"])
-@app.route("/otp.php", methods=["GET", "POST"])
 def otp():
     if "pending_user_id" not in session:
         return redirect(url_for("login"))
@@ -230,14 +228,12 @@ def otp():
 
 
 @app.route("/logout")
-@app.route("/logout.php")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
 
 @app.route("/cars")
-@app.route("/cars.php")
 def cars():
     user = require_login()
     if not isinstance(user, dict):
@@ -266,7 +262,6 @@ def cars():
 
 
 @app.route("/users")
-@app.route("/users.php")
 def users():
     user = require_login()
     if not isinstance(user, dict):
@@ -283,7 +278,6 @@ def users():
 
 
 @app.route("/remote_cars")
-@app.route("/remote_cars.php")
 def remote_cars():
     user = require_login()
     if not isinstance(user, dict):
@@ -303,7 +297,6 @@ def remote_cars():
     return render_template("remote_cars.html", user=user, rows=rows, current="remote")
 
 
-@app.route("/api/cars_search.php")
 @app.route("/api/cars_search")
 def api_cars_search():
     user = require_login()
@@ -323,7 +316,6 @@ def api_cars_search():
 
 
 @app.route("/api/users", methods=["POST"])
-@app.route("/api/users_crud.php", methods=["POST"])
 def users_crud():
     user = require_login()
     if not isinstance(user, dict):
@@ -361,7 +353,7 @@ def users_crud():
     return redirect(url_for("users"))
 
 
-@app.route("/api/cars_crud.php", methods=["POST"])
+@app.route("/api/cars", methods=["POST"])
 def cars_crud():
     user = require_login()
     if not isinstance(user, dict):

@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', `/api/cars_search.php?q=${encodeURIComponent(query)}`, true);
+            xhr.open('GET', `/api/cars_search?q=${encodeURIComponent(query)}`, true);
             xhr.withCredentials = true;
             xhr.onreadystatechange = () => {
                 if (xhr.readyState !== 4) {

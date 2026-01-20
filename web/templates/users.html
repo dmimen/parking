@@ -4,7 +4,7 @@
 <div class="card mb-4">
     <div class="card-header">Добавить пользователя</div>
     <div class="card-body">
-        <form method="post" action="/api/users_crud.php" class="row g-3">
+        <form method="post" action="/api/users" class="row g-3">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="action" value="create">
             <div class="col-md-4"><label class="form-label">Имя</label><input type="text" name="name" class="form-control" required></div>
@@ -34,7 +34,7 @@
                     <td><span class="badge text-bg-light badge-role">{{ role_label(row.role) }}</span></td>
                     <td>{% if row.status == 'active' %}<span class="badge text-bg-success">Активен</span>{% else %}<span class="badge text-bg-secondary">Заблокирован</span>{% endif %}</td>
                     <td class="text-end">
-                        <form id="toggle-{{ row.id }}" method="post" action="/api/users_crud.php" class="d-inline">
+                        <form id="toggle-{{ row.id }}" method="post" action="/api/users" class="d-inline">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="action" value="toggle_status">
                             <input type="hidden" name="user_id" value="{{ row.id }}">
@@ -43,7 +43,7 @@
                             </button>
                         </form>
                         {% if row.id != user.id %}
-                        <form id="delete-{{ row.id }}" method="post" action="/api/users_crud.php" class="d-inline">
+                        <form id="delete-{{ row.id }}" method="post" action="/api/users" class="d-inline">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="user_id" value="{{ row.id }}">
