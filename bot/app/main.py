@@ -78,10 +78,11 @@ async def main() -> None:
     dp.include_router(search.router)
 
     dp["db"] = db
+    dp["config"] = config
 
     worker = asyncio.create_task(otp_worker(bot, db))
     try:
-        await dp.start_polling(bot, db=db)
+        await dp.start_polling(bot, db=db, config=config)
     finally:
         worker.cancel()
         await db.close()
