@@ -6,11 +6,13 @@ require_once __DIR__ . '/validators.php';
 
 function otp_alphabet(): string
 {
+    // Алфавит для OTP без неоднозначных символов.
     return 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 }
 
 function generate_otp(): string
 {
+    // Генерация одноразового кода длиной 8 символов.
     $alphabet = otp_alphabet();
     $code = '';
     for ($i = 0; $i < 8; $i++) {
@@ -21,11 +23,13 @@ function generate_otp(): string
 
 function hash_otp(string $code, string $secret): string
 {
+    // Хэшируем OTP с солью (APP_SECRET).
     return hash_hmac('sha256', $code, $secret);
 }
 
 function create_otp_session(PDO $pdo, int $userId, string $codeHash): void
 {
+    // Сохраняем OTP с TTL 60 секунд.
     $stmt = $pdo->prepare('INSERT INTO otp_sessions (user_id, code_hash, expires_at) VALUES (:user_id, :code_hash, DATE_ADD(NOW(), INTERVAL 60 SECOND))');
     $stmt->execute([
         'user_id' => $userId,
@@ -35,6 +39,7 @@ function create_otp_session(PDO $pdo, int $userId, string $codeHash): void
 
 function enqueue_otp(PDO $pdo, int $userId, string $message): void
 {
+    // Кладем сообщение в outbox для отправки ботом.
     $stmt = $pdo->prepare('INSERT INTO otp_outbox (user_id, message) VALUES (:user_id, :message)');
     $stmt->execute([
         'user_id' => $userId,
@@ -44,6 +49,7 @@ function enqueue_otp(PDO $pdo, int $userId, string $message): void
 
 function verify_otp(PDO $pdo, int $userId, string $inputCode, string $secret): bool
 {
+    // Проверяем OTP с учетом блокировки и срока действия.
     $stmt = $pdo->prepare('SELECT * FROM otp_sessions WHERE user_id = :user_id ORDER BY id DESC LIMIT 1');
     $stmt->execute(['user_id' => $userId]);
     $session = $stmt->fetch();
@@ -59,6 +65,7 @@ function verify_otp(PDO $pdo, int $userId, string $inputCode, string $secret): b
 
     $hash = hash_otp($inputCode, $secret);
     if (!hash_equals($session['code_hash'], $hash)) {
+        // Увеличиваем счетчик ошибок и ставим блокировку на 15 минут.
         $attempts = (int) $session['attempts'] + 1;
         $blockedUntil = null;
         if ($attempts >= 10) {

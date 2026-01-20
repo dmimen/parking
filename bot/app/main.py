@@ -15,6 +15,7 @@ def normalize_phone(phone: str) -> str:
 
 
 async def ensure_admin(db: Database, config: dict) -> None:
+    # Гарантируем создание администратора из переменных окружения.
     phone = normalize_phone(config["admin"]["phone"])
     if not phone:
         return
@@ -33,6 +34,7 @@ async def ensure_admin(db: Database, config: dict) -> None:
 
 
 async def otp_worker(bot: Bot, db: Database) -> None:
+    # Фоновая задача: отправка OTP из таблицы otp_outbox.
     while True:
         rows = await db.fetchall(
             "SELECT o.id, o.user_id, o.message, u.tg_id FROM otp_outbox o JOIN users u ON u.id = o.user_id WHERE o.status = 'pending' ORDER BY o.id ASC LIMIT 10"

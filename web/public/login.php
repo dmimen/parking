@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = 'Введите корректный номер телефона.';
     } else {
         $pdo = db($config);
+        // Ищем активного пользователя по телефону.
         $stmt = $pdo->prepare('SELECT * FROM users WHERE phone = :phone AND status = "active"');
         $stmt->execute(['phone' => $phone]);
         $user = $stmt->fetch();
@@ -19,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!$user['tg_id']) {
             $message = 'Привяжите Telegram: напишите боту /start и отправьте телефон.';
         } else {
+            // Генерируем OTP, сохраняем хэш и ставим задачу в outbox.
             $code = generate_otp();
             $hash = hash_otp($code, $config['app']['secret']);
             create_otp_session($pdo, (int) $user['id'], $hash);
