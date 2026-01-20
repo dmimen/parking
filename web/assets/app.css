@@ -9,7 +9,7 @@ body {
     font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     background: var(--app-bg);
     color: #0f172a;
-    padding-top: calc(var(--navbar-height, 80px) + 16px);
+    padding-top: calc(var(--navbar-height, 80px) + 16px) !important;
 }
 
 .main-content {

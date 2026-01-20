@@ -38,9 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.innerHTML = defaultRows;
                 return;
             }
-            const response = await fetch(`/api/cars_search.php?q=${encodeURIComponent(query)}`);
+            const response = await fetch(`/api/cars_search.php?q=${encodeURIComponent(query)}`, { credentials: 'same-origin' });
             if (!response.ok) {
                 tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Ошибка загрузки поиска</td></tr>`;
+                return;
+            }
+            if (response.redirected && response.url.includes('/login.php')) {
+                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Требуется повторный вход</td></tr>`;
                 return;
             }
             const data = await response.json();
