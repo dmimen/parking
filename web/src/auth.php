@@ -48,13 +48,13 @@ function ensure_admin(array $config): void
     $user = $stmt->fetch();
     if ($user) {
         if ($user['role'] !== 'admin' || $user['status'] !== 'active') {
-            $update = $pdo->prepare('UPDATE users SET role = \"admin\", status = \"active\" WHERE id = :id');
+            $update = $pdo->prepare("UPDATE users SET role = 'admin', status = 'active' WHERE id = :id");
             $update->execute(['id' => $user['id']]);
         }
         return;
     }
 
-    $insert = $pdo->prepare('INSERT INTO users (name, phone, role, status) VALUES (:name, :phone, \"admin\", \"active\")');
+    $insert = $pdo->prepare("INSERT INTO users (name, phone, role, status) VALUES (:name, :phone, 'admin', 'active')");
     $insert->execute([
         'name' => $config['admin']['name'] ?: 'Administrator',
         'phone' => $phone,
