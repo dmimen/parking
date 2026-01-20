@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($title ?? 'Parking', ENT_QUOTES, 'UTF-8') ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/assets/app.css">
 </head>
 <body>
@@ -29,6 +30,7 @@
 <main class="container">
     <?= $content ?>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="/assets/app.js"></script>
 </body>
 </html>

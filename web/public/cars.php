@@ -22,7 +22,7 @@ ob_start();
 ?>
 <h1>Автомобили</h1>
 <div class="form-row">
-    <input type="text" data-car-search placeholder="Поиск по номеру">
+    <input type="text" class="form-control" data-car-search placeholder="Поиск по номеру">
 </div>
 
 <?php if (can_manage_cars($user['role'])): ?>
@@ -30,15 +30,15 @@ ob_start();
     <?= csrf_field() ?>
     <input type="hidden" name="action" value="create">
     <div class="form-row">
-        <input type="text" name="car_model" placeholder="Модель" required>
-        <input type="text" name="car_number" placeholder="Номер" required>
-        <input type="text" name="comment" placeholder="Комментарий">
-        <button type="submit">Добавить</button>
+        <input type="text" name="car_model" class="form-control" placeholder="Модель" required>
+        <input type="text" name="car_number" class="form-control" placeholder="Номер" required>
+        <input type="text" name="comment" class="form-control" placeholder="Комментарий">
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </div>
 </form>
 <?php endif; ?>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Номер</th>
@@ -63,7 +63,7 @@ ob_start();
                             <?= csrf_field() ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="car_id" value="<?= (int) $car['id'] ?>">
-                            <button type="submit">Удалить</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
                         </form>
                     </td>
                 <?php endif; ?>

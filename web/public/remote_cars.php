@@ -11,7 +11,7 @@ $rows = $stmt->fetchAll();
 ob_start();
 ?>
 <h1>История удалений</h1>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Номер</th>

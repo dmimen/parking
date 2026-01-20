@@ -22,20 +22,20 @@ ob_start();
     <?= csrf_field() ?>
     <input type="hidden" name="action" value="create">
     <div class="form-row">
-        <input type="text" name="name" placeholder="Имя" required>
-        <input type="text" name="phone" placeholder="Телефон" required>
-        <select name="role">
+        <input type="text" name="name" class="form-control" placeholder="Имя" required>
+        <input type="text" name="phone" class="form-control" placeholder="Телефон (любой формат)" required>
+        <select name="role" class="form-select">
             <?php if ($user['role'] === 'admin'): ?>
                 <option value="admin">admin</option>
             <?php endif; ?>
             <option value="manager">manager</option>
             <option value="guard">guard</option>
         </select>
-        <button type="submit">Добавить</button>
+        <button type="submit" class="btn btn-primary">Добавить</button>
     </div>
 </form>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Имя</th>
@@ -57,14 +57,14 @@ ob_start();
                         <?= csrf_field() ?>
                         <input type="hidden" name="action" value="toggle_status">
                         <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                        <button type="submit">Сменить статус</button>
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Сменить статус</button>
                     </form>
                     <?php if ($row['id'] !== $user['id']): ?>
                         <form method="post" action="/api/users_crud.php" style="display:inline-block">
                             <?= csrf_field() ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                            <button type="submit">Удалить</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
                         </form>
                     <?php endif; ?>
                 </td>

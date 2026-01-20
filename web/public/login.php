@@ -41,8 +41,8 @@ ob_start();
 <form method="post">
     <?= csrf_field() ?>
     <div class="form-row">
-        <input type="text" name="phone" placeholder="Телефон" required>
-        <button type="submit">Получить OTP</button>
+        <input type="text" name="phone" class="form-control" placeholder="Телефон (любой формат)" required>
+        <button type="submit" class="btn btn-primary">Получить OTP</button>
     </div>
 </form>
 <?php

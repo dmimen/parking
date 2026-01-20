@@ -30,8 +30,8 @@ ob_start();
 <form method="post">
     <?= csrf_field() ?>
     <div class="form-row">
-        <input type="text" name="code" placeholder="Код из Telegram" required maxlength="8">
-        <button type="submit">Подтвердить</button>
+        <input type="text" name="code" class="form-control" placeholder="Код из Telegram" required maxlength="8">
+        <button type="submit" class="btn btn-primary">Подтвердить</button>
     </div>
 </form>
 <?php
