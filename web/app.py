@@ -65,6 +65,27 @@ def normalize_plate(text: str) -> str:
     return normalized.upper()
 
 
+def normalize_plate_sql(field: str) -> str:
+    expr = f"UPPER(REPLACE(REPLACE({field}, ' ', ''), '-', ''))"
+    mapping = {
+        "А": "A",
+        "В": "B",
+        "Е": "E",
+        "К": "K",
+        "М": "M",
+        "Н": "H",
+        "О": "O",
+        "Р": "P",
+        "С": "C",
+        "Т": "T",
+        "У": "Y",
+        "Х": "X",
+    }
+    for src, dst in mapping.items():
+        expr = f"REPLACE({expr}, '{src}', '{dst}')"
+    return expr
+
+
 def role_label(role: str) -> str:
     return {
         "admin": "Администратор",
@@ -291,9 +312,7 @@ def api_cars_search():
     q = normalize_plate(request.args.get("q", ""))
     if not q:
         return jsonify({"results": []})
-    expr = (
-        "REPLACE(REPLACE(UPPER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(car_number, ' ', ''), '-', ''), 'А', 'A'), 'В', 'B'), 'Е', 'E'), 'К', 'K'), 'М', 'M'), 'Н', 'H'), 'О', 'O'), 'Р', 'P'), 'С', 'C'), 'Т', 'T'), 'У', 'Y'), 'Х', 'X'))"
-    )
+    expr = normalize_plate_sql("car_number")
     with db().cursor() as cur:
         cur.execute(
             f"SELECT car_number, car_model, comment, date_added FROM cars WHERE {expr} LIKE %s ORDER BY date_added DESC LIMIT 20",
