@@ -49,5 +49,5 @@ async def contact_handler(message: Message, db, config):
         "введите номер телефона и подтвердите вход одноразовым кодом, который я пришлю сюда.\n"
         "Код действует 60 секунд.\n\n"
         "Если понадобится — просто напишите номер автомобиля в чат.",
-        reply_markup=main_menu(can_manage(user[\"role\"])),
+        reply_markup=main_menu(can_manage(user["role"])),
     )
