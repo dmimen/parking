@@ -1,7 +1,11 @@
-FROM php:8.2-apache
+FROM python:3.11-slim
 
-RUN docker-php-ext-install pdo_mysql
+WORKDIR /app
 
-COPY apache.conf /etc/apache2/sites-available/000-default.conf
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /var/www/html
+COPY . /app
+
+EXPOSE 80
+CMD ["python", "app.py"]

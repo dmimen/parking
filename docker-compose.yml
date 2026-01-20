@@ -29,7 +29,7 @@ services:
       ADM_PHONE: ${ADM_PHONE}
       ADM_NAME: ${ADM_NAME}
     volumes:
-      - ./web:/var/www/html
+      - ./web:/app
     ports:
       - "8080:80"
     depends_on:
