@@ -1,3 +1,4 @@
+import asyncio
 import aiomysql
 
 
@@ -7,14 +8,22 @@ class Database:
         self._pool = None
 
     async def connect(self) -> None:
-        self._pool = await aiomysql.create_pool(
-            host=self._config["db"]["host"],
-            port=self._config["db"]["port"],
-            user=self._config["db"]["user"],
-            password=self._config["db"]["password"],
-            db=self._config["db"]["name"],
-            autocommit=True,
-        )
+        attempts = 0
+        while True:
+            try:
+                self._pool = await aiomysql.create_pool(
+                    host=self._config["db"]["host"],
+                    port=self._config["db"]["port"],
+                    user=self._config["db"]["user"],
+                    password=self._config["db"]["password"],
+                    db=self._config["db"]["name"],
+                    autocommit=True,
+                )
+                return
+            except Exception:
+                attempts += 1
+                delay = min(5, 0.5 * attempts)
+                await asyncio.sleep(delay)
 
     async def close(self) -> None:
         if self._pool:
