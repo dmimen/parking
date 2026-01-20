@@ -17,6 +17,13 @@ $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
 $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $cars = $stmt->fetchAll();
+if ($user['role'] === 'admin') {
+    $stmt = $pdo->prepare('SELECT cars.*, users.name AS added_by_name, users.phone AS added_by_phone FROM cars LEFT JOIN users ON cars.who_added = users.id ORDER BY date_added DESC LIMIT :limit OFFSET :offset');
+    $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $cars = $stmt->fetchAll();
+}
 
 ob_start();
 ?>
@@ -45,6 +52,9 @@ ob_start();
             <th>Модель</th>
             <th>Комментарий</th>
             <th>Добавлен</th>
+            <?php if ($user['role'] === 'admin'): ?>
+                <th>Добавил</th>
+            <?php endif; ?>
             <?php if (can_manage_cars($user['role'])): ?>
                 <th>Действия</th>
             <?php endif; ?>
@@ -57,6 +67,14 @@ ob_start();
                 <td><?= htmlspecialchars($car['car_model'], ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars($car['comment'] ?? '', ENT_QUOTES, 'UTF-8') ?></td>
                 <td><?= htmlspecialchars($car['date_added'], ENT_QUOTES, 'UTF-8') ?></td>
+                <?php if ($user['role'] === 'admin'): ?>
+                    <td>
+                        <?= htmlspecialchars($car['added_by_name'] ?? '—', ENT_QUOTES, 'UTF-8') ?>
+                        <?php if (!empty($car['added_by_phone'])): ?>
+                            <span class="text-muted">(<?= htmlspecialchars($car['added_by_phone'], ENT_QUOTES, 'UTF-8') ?>)</span>
+                        <?php endif; ?>
+                    </td>
+                <?php endif; ?>
                 <?php if (can_manage_cars($user['role'])): ?>
                     <td>
                         <form method="post" action="/api/cars_crud.php" style="display:inline-block">

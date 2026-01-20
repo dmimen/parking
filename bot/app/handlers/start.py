@@ -9,7 +9,14 @@ router = Router()
 
 
 def normalize_phone(phone: str) -> str:
-    return "".join(ch for ch in phone if ch.isdigit())
+    digits = "".join(ch for ch in phone if ch.isdigit())
+    if not digits:
+        return ""
+    if len(digits) == 10:
+        return "7" + digits
+    if len(digits) == 11 and digits[0] in {"7", "8"}:
+        return "7" + digits[1:]
+    return digits
 
 
 @router.message(CommandStart())
