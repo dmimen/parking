@@ -28,7 +28,7 @@ async def start_handler(message: Message, db):
 
 
 @router.message(lambda m: m.contact is not None)
-async def contact_handler(message: Message, db):
+async def contact_handler(message: Message, db, config):
     # Принимаем только контакт владельца (Telegram передает user_id владельца).
     if message.contact.user_id != message.from_user.id:
         await message.answer("Нужно отправить свой контакт через кнопку ниже.")
@@ -39,7 +39,15 @@ async def contact_handler(message: Message, db):
         await message.answer("Пользователь не найден или заблокирован.")
         return
     await db.execute("UPDATE users SET tg_id = %s WHERE id = %s", (message.from_user.id, user["id"]))
+    web_url = config.get("web_url", "http://localhost:8080")
     await message.answer(
-        f"Привязка выполнена. Роль: {user['role']}",
-        reply_markup=main_menu(can_manage(user["role"])),
+        "Регистрация завершена — ваш Telegram привязан к учетной записи.\n\n"
+        "Что можно делать:\n\n"
+        "Поиск авто: отправьте госномер целиком или его часть — я покажу совпадения (марка, номер, комментарий).\n"
+        "Пример: А123ВС77 или 123ВС.\n\n"
+        f"Вход на портал: для авторизации на портале Parking перейдите на сайт {web_url},\n"
+        "введите номер телефона и подтвердите вход одноразовым кодом, который я пришлю сюда.\n"
+        "Код действует 60 секунд.\n\n"
+        "Если понадобится — просто напишите номер автомобиля в чат.",
+        reply_markup=main_menu(can_manage(user[\"role\"])),
     )

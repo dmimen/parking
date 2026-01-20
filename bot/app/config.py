@@ -13,6 +13,7 @@ def get_config() -> dict:
         "bot": {
             "token": os.getenv("BOT_TOKEN", ""),
         },
+        "web_url": os.getenv("WEB_URL", "http://localhost:8080"),
         "app_secret": os.getenv("APP_SECRET", "change_me"),
         "admin": {
             "phone": os.getenv("ADM_PHONE", ""),
