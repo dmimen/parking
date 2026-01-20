@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="d-flex align-items-center justify-dontent-between mb-3">
-    <div>
-        <h1 class="h3 mb-1">Автомобили</h1>
-        <p class="text-muted mb-0">Поиск по номеру и управление списком.</p>
-    </div>
+<div class="mb-3">
+    <h1 class="h3 mb-1">Автомобили</h1>
+    <p class="text-muted mb-0">Поиск по номеру и управление списком.</p>
     {% if user.role in ['admin','manager'] %}
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
-            <i class="bi bi-plus-lg me-1"></i>Добавить авто
-        </button>
+        <div class="mt-2">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCarModal">
+                <i class="bi bi-plus-lg me-1"></i>Добавить авто
+            </button>
+        </div>
     {% endif %}
 </div>
 
@@ -26,14 +26,16 @@
 <div class="card">
     <div class="card-header">Список автомобилей</div>
     <div class="card-body table-responsive">
-        <table class="table table-striped table-hover align-middle" data-admin-columns="{{ '1' if user.role=='admin' else '0' }}" data-actions="{{ '1' if user.role in ['admin','manager'] else '0' }}">
+        <table class="table table-striped table-hover align-middle" data-admin="{{ '1' if user.role=='admin' else '0' }}" data-actions="{{ '1' if user.role in ['admin','manager'] else '0' }}">
             <thead>
                 <tr>
                     <th>Номер</th>
                     <th>Модель</th>
                     <th>Комментарий</th>
-                    <th>Добавлен</th>
-                    {% if user.role == 'admin' %}<th>Добавил</th>{% endif %}
+                    {% if user.role == 'admin' %}
+                        <th>Добавлен</th>
+                        <th>Добавил</th>
+                    {% endif %}
                     {% if user.role in ['admin','manager'] %}<th class="text-end">Действия</th>{% endif %}
                 </tr>
             </thead>
@@ -43,8 +45,8 @@
                     <td class="fw-semibold">{{ car.car_number }}</td>
                     <td>{{ car.car_model }}</td>
                     <td>{{ car.comment or '' }}</td>
-                    <td>{{ car.date_added }}</td>
                     {% if user.role == 'admin' %}
+                    <td>{{ car.date_added }}</td>
                     <td>{{ car.added_by_name or '—' }}</td>
                     {% endif %}
                     {% if user.role in ['admin','manager'] %}
@@ -119,6 +121,32 @@
             <div class="col-md-8"><input type="file" name="import_file" class="form-control" accept=".xlsx" required></div>
             <div class="col-md-4"><button type="submit" class="btn btn-primary w-100"><i class="bi bi-upload me-1"></i>Загрузить</button></div>
         </form>
+        <div class="mt-4">
+            <div class="text-muted mb-2">Пример структуры файла (строка 1 — заголовки):</div>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered mb-0">
+                    <thead>
+                        <tr>
+                            <th>Модель</th>
+                            <th>Номер</th>
+                            <th>Комментарий</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Toyota Camry</td>
+                            <td>А123ВС77</td>
+                            <td>Белый седан</td>
+                        </tr>
+                        <tr>
+                            <td>Lada Vesta</td>
+                            <td>М456ОР99</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endif %}

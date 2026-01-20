@@ -402,5 +402,10 @@ def cars_crud():
     return redirect(url_for("cars"))
 
 
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template("404.html", user=None, current=""), 404
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=80)

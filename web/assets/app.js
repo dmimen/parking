@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsBox = document.querySelector('[data-search-results]');
     const tableBody = document.querySelector('[data-car-results]');
     const table = tableBody ? tableBody.closest('table') : null;
-    const hasAdminColumns = table?.dataset.adminColumns === '1';
+    const isAdmin = table?.dataset.admin === '1';
     const hasActions = table?.dataset.actions === '1';
     const defaultRows = tableBody ? tableBody.innerHTML : '';
     if (searchInput && resultsBox && tableBody) {
@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${row.car_number}</td>
                         <td>${row.car_model}</td>
                         <td>${row.comment || ''}</td>
-                        <td>${row.date_added}</td>
-                        ${hasAdminColumns ? '<td>—</td>' : ''}
+                        ${isAdmin ? `<td>${row.date_added}</td>` : ''}
+                        ${isAdmin ? '<td>—</td>' : ''}
                         ${hasActions ? '<td class="text-end">—</td>' : ''}
                     </tr>
                 `).join('');
