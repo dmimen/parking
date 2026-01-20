@@ -168,6 +168,27 @@ ob_start();
     </div>
 </div>
 <?php endif; ?>
+
+<?php if (can_manage_cars($user['role'])): ?>
+<div class="card mt-4">
+    <div class="card-header">Импорт автомобилей (Excel)</div>
+    <div class="card-body">
+        <form method="post" action="/api/cars_crud.php" enctype="multipart/form-data" class="row g-3">
+            <?= csrf_field() ?>
+            <input type="hidden" name="action" value="import">
+            <div class="col-md-8">
+                <input type="file" name="import_file" class="form-control" accept=".xlsx,.csv" required>
+                <div class="form-note mt-1">Файл: 3 колонки (Марка, Номер, Комментарий).</div>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-upload me-1"></i>Загрузить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php endif; ?>
 <?php
 $content = ob_get_clean();
 $title = 'Автомобили';
