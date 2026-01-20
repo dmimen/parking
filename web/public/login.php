@@ -34,19 +34,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ob_start();
 ?>
-<h1>Вход</h1>
-<?php if ($message): ?>
-    <div class="alert"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
-<?php endif; ?>
-<form method="post">
-    <?= csrf_field() ?>
-    <div class="form-row">
-        <input type="text" name="phone" class="form-control" placeholder="Телефон (любой формат)" required>
-        <button type="submit" class="btn btn-primary">Получить OTP</button>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-2">Вход</h1>
+                <p class="text-muted mb-4">Введите номер телефона. Мы отправим одноразовый код в Telegram.</p>
+                <?php if ($message): ?>
+                    <div class="alert alert-warning"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
+                <?php endif; ?>
+                <form method="post" novalidate>
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label class="form-label">Телефон</label>
+                        <input type="text" name="phone" class="form-control" placeholder="+7 (900) 000-00-00" required>
+                        <div class="form-note mt-1">Формат произвольный: 7/8/+7 — все варианты подойдут.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Получить OTP</button>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
+</div>
 <?php
 $content = ob_get_clean();
 $title = 'Вход';
 $user = null;
+$current = '';
 require __DIR__ . '/../templates/layout.php';

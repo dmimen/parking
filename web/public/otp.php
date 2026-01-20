@@ -23,19 +23,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 ob_start();
 ?>
-<h1>Подтверждение OTP</h1>
-<?php if ($message): ?>
-    <div class="alert"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
-<?php endif; ?>
-<form method="post">
-    <?= csrf_field() ?>
-    <div class="form-row">
-        <input type="text" name="code" class="form-control" placeholder="Код из Telegram" required maxlength="8">
-        <button type="submit" class="btn btn-primary">Подтвердить</button>
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card">
+            <div class="card-body p-4">
+                <h1 class="h4 mb-2">Подтверждение</h1>
+                <p class="text-muted mb-4">Введите код из Telegram. Он действует 60 секунд.</p>
+                <?php if ($message): ?>
+                    <div class="alert alert-warning"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
+                <?php endif; ?>
+                <form method="post" novalidate>
+                    <?= csrf_field() ?>
+                    <div class="mb-3">
+                        <label class="form-label">OTP-код</label>
+                        <input type="text" name="code" class="form-control" placeholder="8 символов" required maxlength="8">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Подтвердить</button>
+                </form>
+            </div>
+        </div>
     </div>
-</form>
+</div>
 <?php
 $content = ob_get_clean();
 $title = 'Подтверждение';
 $user = null;
+$current = '';
 require __DIR__ . '/../templates/layout.php';

@@ -7,12 +7,16 @@ function debounce(fn, delay) {
 }
 
 const searchInput = document.querySelector('[data-car-search]');
+const searchIndicator = document.querySelector('[data-search-indicator]');
 if (searchInput) {
     const tableBody = document.querySelector('[data-car-results]');
     const defaultRows = tableBody ? tableBody.innerHTML : '';
 
     const runSearch = debounce(async () => {
         const query = searchInput.value.trim();
+        if (searchIndicator) {
+            searchIndicator.textContent = query ? 'Поиск…' : '';
+        }
         if (!query) {
             tableBody.innerHTML = defaultRows;
             return;
@@ -30,7 +34,24 @@ if (searchInput) {
                 <td>${row.date_added}</td>
             </tr>
         `).join('');
-    }, 300);
+    }, 400);
 
     searchInput.addEventListener('input', runSearch);
 }
+
+document.querySelectorAll('[data-confirm]')
+    .forEach((button) => {
+        button.addEventListener('click', (event) => {
+            const modalId = button.dataset.confirm;
+            const modal = document.getElementById(modalId);
+            if (!modal) {
+                return;
+            }
+            const formId = button.dataset.form;
+            const form = document.getElementById(formId);
+            const confirmButton = modal.querySelector('[data-confirm-submit]');
+            if (confirmButton && form) {
+                confirmButton.onclick = () => form.submit();
+            }
+        });
+    });
