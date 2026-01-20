@@ -1,18 +1,13 @@
-import re
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 from app.keyboards import cancel_keyboard, main_menu, delete_button
+from app.plates import normalize_plate
 from app.rbac import can_manage
 from app.states import AddCar, DeleteCar
 
 router = Router()
-
-
-def normalize_number(text: str) -> str:
-    return re.sub(r"\s+", "", text.upper())
-
 
 async def get_user(db, tg_id: int):
     return await db.fetchone("SELECT * FROM users WHERE tg_id = %s AND status = 'active'", (tg_id,))
@@ -42,7 +37,7 @@ async def add_car_number(message: Message, state: FSMContext):
     if message.text == "Отмена":
         await state.clear()
         return
-    await state.update_data(car_number=normalize_number(message.text))
+    await state.update_data(car_number=normalize_plate(message.text))
     await state.set_state(AddCar.comment)
     await message.answer("Комментарий (или -):", reply_markup=cancel_keyboard())
 
@@ -82,7 +77,7 @@ async def delete_car_query(message: Message, state: FSMContext, db):
     if message.text == "Отмена":
         await state.clear()
         return
-    query = normalize_number(message.text)
+    query = normalize_plate(message.text)
     results = await db.fetchall(
         "SELECT id, car_model, car_number, comment FROM cars WHERE car_number LIKE %s ORDER BY date_added DESC LIMIT 10",
         (f"%{query}%",),

@@ -23,6 +23,7 @@ if ($action === 'create') {
             'phone' => $phone,
             'role' => $role,
         ]);
+        $_SESSION['flash'][] = ['type' => 'success', 'message' => 'Пользователь добавлен.'];
     }
 } elseif ($action === 'toggle_status') {
     $targetId = (int) ($_POST['user_id'] ?? 0);
@@ -41,6 +42,10 @@ if ($action === 'create') {
                 'status' => $newStatus,
                 'id' => $targetId,
             ]);
+            $_SESSION['flash'][] = [
+                'type' => 'success',
+                'message' => $newStatus === 'active' ? 'Пользователь разблокирован.' : 'Пользователь заблокирован.',
+            ];
         }
     }
 } elseif ($action === 'delete') {
@@ -56,6 +61,7 @@ if ($action === 'create') {
             }
             $delete = $pdo->prepare('DELETE FROM users WHERE id = :id');
             $delete->execute(['id' => $targetId]);
+            $_SESSION['flash'][] = ['type' => 'success', 'message' => 'Пользователь удален.'];
         }
     }
 }

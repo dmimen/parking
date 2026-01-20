@@ -1,20 +1,16 @@
-import re
 from aiogram import Router
 from aiogram.types import Message
 
+from app.plates import normalize_plate
+
 router = Router()
-
-
-def normalize_number(text: str) -> str:
-    return re.sub(r"\s+", "", text.upper())
-
 
 @router.message(lambda m: m.text and m.text not in {"Добавить автомобиль", "Удалить автомобиль", "Отмена"})
 async def search_handler(message: Message, db):
     user = await db.fetchone("SELECT * FROM users WHERE tg_id = %s AND status = 'active'", (message.from_user.id,))
     if not user:
         return
-    query = normalize_number(message.text)
+    query = normalize_plate(message.text)
     if len(query) < 2:
         return
     results = await db.fetchall(

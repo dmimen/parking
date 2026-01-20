@@ -17,9 +17,51 @@ function normalize_phone(string $phone): string
     return $digits;
 }
 
+function normalize_plate(string $number): string
+{
+    $clean = preg_replace('/[\s-]+/', '', $number) ?? '';
+    $clean = mb_strtoupper($clean, 'UTF-8');
+    $map = [
+        'А' => 'A',
+        'В' => 'B',
+        'Е' => 'E',
+        'К' => 'K',
+        'М' => 'M',
+        'Н' => 'H',
+        'О' => 'O',
+        'Р' => 'P',
+        'С' => 'C',
+        'Т' => 'T',
+        'У' => 'Y',
+        'Х' => 'X',
+    ];
+    return strtr($clean, $map);
+}
+
+function normalize_plate_sql(string $field): string
+{
+    $expr = "REPLACE(REPLACE(UPPER({$field}), ' ', ''), '-', '')";
+    $map = [
+        'А' => 'A',
+        'В' => 'B',
+        'Е' => 'E',
+        'К' => 'K',
+        'М' => 'M',
+        'Н' => 'H',
+        'О' => 'O',
+        'Р' => 'P',
+        'С' => 'C',
+        'Т' => 'T',
+        'У' => 'Y',
+        'Х' => 'X',
+    ];
+    foreach ($map as $from => $to) {
+        $expr = "REPLACE({$expr}, '{$from}', '{$to}')";
+    }
+    return $expr;
+}
+
 function normalize_car_number(string $number): string
 {
-    $clean = preg_replace('/\s+/', '', $number);
-    $clean = strtoupper($clean ?? '');
-    return $clean;
+    return normalize_plate($number);
 }

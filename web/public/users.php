@@ -47,10 +47,10 @@ ob_start();
                 <label class="form-label">Роль</label>
                 <select name="role" class="form-select">
                     <?php if ($user['role'] === 'admin'): ?>
-                        <option value="admin">admin</option>
+                        <option value="admin">Администратор</option>
                     <?php endif; ?>
-                    <option value="manager">manager</option>
-                    <option value="guard">guard</option>
+                    <option value="manager">Менеджер</option>
+                    <option value="guard">Охранник</option>
                 </select>
             </div>
             <div class="col-md-1 d-flex align-items-end">
