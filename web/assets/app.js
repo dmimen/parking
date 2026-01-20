@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchIndicator = document.querySelector('[data-search-indicator]');
     const resultsBox = document.querySelector('[data-search-results]');
     if (searchInput && resultsBox) {
-        const runSearch = debounce(async () => {
+        const runSearch = debounce(() => {
             const query = searchInput.value.trim();
             if (searchIndicator) {
                 searchIndicator.textContent = query ? 'Поиск…' : '';
@@ -30,27 +30,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 resultsBox.innerHTML = '';
                 return;
             }
-            const response = await fetch(`/api/cars_search.php?q=${encodeURIComponent(query)}`, { credentials: 'same-origin' });
-            if (!response.ok) {
-                resultsBox.innerHTML = '<div class="text-muted">Ошибка загрузки поиска</div>';
-                return;
-            }
-            if (response.redirected && response.url.includes('/login.php')) {
-                resultsBox.innerHTML = '<div class="text-muted">Требуется повторный вход</div>';
-                return;
-            }
-            const data = await response.json();
-            if (!data.results.length) {
-                resultsBox.innerHTML = '<div class="text-muted">Ничего не найдено</div>';
-                return;
-            }
-            resultsBox.innerHTML = data.results.map(row => `
-                <div class="search-result">
-                    <div class="fw-semibold">${row.car_number}</div>
-                    <div class="text-muted small">${row.car_model} • ${row.date_added}</div>
-                    <div class="small">${row.comment || 'Без комментария'}</div>
-                </div>
-            `).join('');
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `/api/cars_search.php?q=${encodeURIComponent(query)}`, true);
+            xhr.withCredentials = true;
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState !== 4) {
+                    return;
+                }
+                if (xhr.status >= 300 && xhr.status < 400) {
+                    resultsBox.innerHTML = '<div class="text-muted">Требуется повторный вход</div>';
+                    return;
+                }
+                if (xhr.status !== 200) {
+                    resultsBox.innerHTML = '<div class="text-muted">Ошибка загрузки поиска</div>';
+                    return;
+                }
+                let data = null;
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (error) {
+                    resultsBox.innerHTML = '<div class="text-muted">Ошибка обработки ответа</div>';
+                    return;
+                }
+                if (!data.results || !data.results.length) {
+                    resultsBox.innerHTML = '<div class="text-muted">Ничего не найдено</div>';
+                    return;
+                }
+                resultsBox.innerHTML = data.results.map(row => `
+                    <div class="search-result">
+                        <div class="fw-semibold">${row.car_number}</div>
+                        <div class="text-muted small">${row.car_model} • ${row.date_added}</div>
+                        <div class="small">${row.comment || 'Без комментария'}</div>
+                    </div>
+                `).join('');
+            };
+            xhr.send();
         }, 400);
 
         searchInput.addEventListener('input', runSearch);
