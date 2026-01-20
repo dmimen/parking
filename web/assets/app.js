@@ -7,6 +7,10 @@ function debounce(fn, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const nav = document.querySelector('.navbar');
+    if (nav) {
+        document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
+    }
     const searchInput = document.querySelector('[data-car-search]');
     const searchIndicator = document.querySelector('[data-search-indicator]');
     if (searchInput) {
@@ -30,6 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const data = await response.json();
+            if (!data.results.length) {
+                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Ничего не найдено</td></tr>`;
+                return;
+            }
             tableBody.innerHTML = data.results.map(row => `
                 <tr>
                     <td>${row.car_number}</td>
@@ -43,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 400);
 
         searchInput.addEventListener('input', runSearch);
+        searchInput.addEventListener('keyup', runSearch);
     }
 
     document.querySelectorAll('[data-confirm]')
@@ -61,4 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+});
+
+window.addEventListener('resize', () => {
+    const nav = document.querySelector('.navbar');
+    if (nav) {
+        document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
+    }
 });
