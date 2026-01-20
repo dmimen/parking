@@ -52,7 +52,7 @@ ob_start();
 <div class="card">
     <div class="card-header">Список автомобилей</div>
     <div class="card-body table-responsive">
-        <table class="table table-striped table-hover align-middle">
+        <table class="table table-striped table-hover align-middle" data-admin-columns="<?= $user['role'] === 'admin' ? '1' : '0' ?>" data-actions="<?= can_manage_cars($user['role']) ? '1' : '0' ?>">
             <thead>
                 <tr>
                     <th>Номер</th>

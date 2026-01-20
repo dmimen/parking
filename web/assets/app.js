@@ -10,6 +10,9 @@ const searchInput = document.querySelector('[data-car-search]');
 const searchIndicator = document.querySelector('[data-search-indicator]');
 if (searchInput) {
     const tableBody = document.querySelector('[data-car-results]');
+    const table = tableBody ? tableBody.closest('table') : null;
+    const hasAdminColumns = table?.dataset.adminColumns === '1';
+    const hasActions = table?.dataset.actions === '1';
     const defaultRows = tableBody ? tableBody.innerHTML : '';
 
     const runSearch = debounce(async () => {
@@ -32,6 +35,8 @@ if (searchInput) {
                 <td>${row.car_model}</td>
                 <td>${row.comment || ''}</td>
                 <td>${row.date_added}</td>
+                ${hasAdminColumns ? '<td>—</td>' : ''}
+                ${hasActions ? '<td class=\"text-end\">—</td>' : ''}
             </tr>
         `).join('');
     }, 400);
