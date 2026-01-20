@@ -7,10 +7,14 @@ function debounce(fn, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const nav = document.querySelector('.navbar');
-    if (nav) {
-        document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
-    }
+    const updateNavbarHeight = () => {
+        const nav = document.querySelector('.navbar');
+        if (nav) {
+            document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
+        }
+    };
+    updateNavbarHeight();
+    setTimeout(updateNavbarHeight, 200);
     const searchInput = document.querySelector('[data-car-search]');
     const searchIndicator = document.querySelector('[data-search-indicator]');
     if (searchInput) {
@@ -70,11 +74,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-});
-
-window.addEventListener('resize', () => {
-    const nav = document.querySelector('.navbar');
-    if (nav) {
-        document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
-    }
+    window.addEventListener('resize', updateNavbarHeight);
 });

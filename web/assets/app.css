@@ -11,8 +11,8 @@ body {
     color: #0f172a;
 }
 
-.main-content {
-    padding-top: calc(var(--navbar-height, 80px) + 16px);
+.navbar-spacer {
+    height: calc(var(--navbar-height, 80px) + 8px);
 }
 
 .navbar-brand {
