@@ -5,7 +5,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
     <div class="container-xl">
         <a class="navbar-brand fw-semibold" href="/index.php">
-            <i class="bi bi-p-circle me-2"></i>Parking
+            <i class="bi bi-p-circle me-2"></i>Парковка ДПОГО
         </a>
         <?php if (!empty($user)): ?>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
