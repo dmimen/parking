@@ -47,7 +47,7 @@ async def otp_worker(bot: Bot, db: Database) -> None:
                         (row["id"],),
                     )
                     continue
-                await bot.send_message(row["tg_id"], row["message"])
+                await bot.send_message(row["tg_id"], row["message"], parse_mode="HTML")
                 await db.execute(
                     "UPDATE otp_outbox SET status = 'sent', sent_at = NOW() WHERE id = %s",
                     (row["id"],),

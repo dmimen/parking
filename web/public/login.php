@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $code = generate_otp();
             $hash = hash_otp($code, $config['app']['secret']);
             create_otp_session($pdo, (int) $user['id'], $hash);
-            enqueue_otp($pdo, (int) $user['id'], "Ваш OTP: {$code}");
+            enqueue_otp($pdo, (int) $user['id'], "<code>{$code}</code>");
             $_SESSION['pending_user_id'] = $user['id'];
             header('Location: /otp.php');
             exit;
@@ -47,8 +47,7 @@ ob_start();
                     <?= csrf_field() ?>
                     <div class="mb-3">
                         <label class="form-label">Телефон</label>
-                        <input type="text" name="phone" class="form-control" placeholder="+7 (900) 000-00-00" required>
-                        <div class="form-note mt-1">Формат произвольный: 7/8/+7 — все варианты подойдут.</div>
+                        <input type="text" name="phone" class="form-control" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Получить OTP</button>
                 </form>

@@ -41,8 +41,7 @@ ob_start();
             </div>
             <div class="col-md-4">
                 <label class="form-label">Телефон</label>
-                <input type="text" name="phone" class="form-control" placeholder="+7 (900) 000-00-00" required>
-                <div class="form-note mt-1">Формат произвольный: 7/8/+7 — все варианты подойдут.</div>
+                <input type="text" name="phone" class="form-control" required>
             </div>
             <div class="col-md-3">
                 <label class="form-label">Роль</label>
