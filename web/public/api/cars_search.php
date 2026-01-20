@@ -9,5 +9,5 @@ $stmt = $pdo->prepare('SELECT car_number, car_model, comment, date_added FROM ca
 $stmt->execute(['q' => "%{$q}%"]);
 $results = $stmt->fetchAll();
 
-header('Content-Type: application/json');
-echo json_encode(['results' => $results]);
+header('Content-Type: application/json; charset=utf-8');
+echo json_encode(['results' => $results], JSON_UNESCAPED_UNICODE);

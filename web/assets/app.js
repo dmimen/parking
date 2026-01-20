@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateNavbarHeight = () => {
         const nav = document.querySelector('.navbar');
         if (nav) {
-            document.documentElement.style.setProperty('--navbar-height', `${nav.offsetHeight}px`);
+            const height = `${nav.offsetHeight}px`;
+            document.documentElement.style.setProperty('--navbar-height', height);
+            document.body.style.setProperty('--navbar-height', height);
         }
     };
     updateNavbarHeight();
@@ -19,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchIndicator = document.querySelector('[data-search-indicator]');
     if (searchInput) {
         const tableBody = document.querySelector('[data-car-results]');
+        if (!tableBody) {
+            return;
+        }
         const table = tableBody ? tableBody.closest('table') : null;
         const hasAdminColumns = table?.dataset.adminColumns === '1';
         const hasActions = table?.dataset.actions === '1';
@@ -35,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             const response = await fetch(`/api/cars_search.php?q=${encodeURIComponent(query)}`);
             if (!response.ok) {
+                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Ошибка загрузки поиска</td></tr>`;
                 return;
             }
             const data = await response.json();

@@ -9,10 +9,11 @@ body {
     font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     background: var(--app-bg);
     color: #0f172a;
+    padding-top: calc(var(--navbar-height, 80px) + 16px);
 }
 
-.navbar-spacer {
-    height: calc(var(--navbar-height, 80px) + 8px);
+.main-content {
+    padding-top: 0;
 }
 
 .navbar-brand {

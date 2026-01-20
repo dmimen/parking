@@ -16,7 +16,6 @@
 </head>
 <body>
 <?php require __DIR__ . '/partials/navbar.php'; ?>
-<div class="navbar-spacer"></div>
 <main class="main-content">
     <div class="container-xl py-4">
         <?php require __DIR__ . '/partials/flash.php'; ?>
