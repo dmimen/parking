@@ -1,4 +1,4 @@
-# Parking System (PHP + Aiogram + MariaDB)
+# Parking System (Flask + Aiogram + MariaDB)
 
 ## Требования
 - Docker
@@ -24,7 +24,7 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-Web UI: http://localhost:8080
+Web UI: http://localhost:8082
 
 ## Подробная инструкция по установке
 1. **Подготовка окружения**
@@ -39,11 +39,13 @@ Web UI: http://localhost:8080
      - `DB_PASSWORD=parking_pass`
      - `DB_PORT=3306`
    - Заполните параметры Web:
-     - `WEB_BASE_URL=http://localhost:8080`
+     - `WEB_BASE_URL=http://localhost:8082`
+     - `WEB_URL=http://parking.dpogo.ru` (публичный адрес портала для ссылки в сообщениях бота)
      - `APP_SECRET=...`
      - `SESSION_COOKIE_NAME=park_sess`
    - Заполните параметры Bot:
      - `BOT_TOKEN=...`
+     - `BOT_WEBHOOK_URL=...` (необязательно, нужно только при переводе бота на webhook-режим; в текущем docker-compose используется polling)
    - Заполните администратора:
      - `ADM_PHONE=...`
      - `ADM_NAME=...`
@@ -56,7 +58,7 @@ docker compose up -d --build
 ```
 
 4. **Проверка**
-   - Откройте http://localhost:8080
+   - Откройте http://localhost:8082
    - Войдите через телефон администратора, получите OTP в Telegram.
 
 ## Дополнительно
@@ -75,9 +77,9 @@ Adminer: http://localhost:8081
    - Введите `/start` и отправьте телефон.
 
 2. **Авторизация по OTP**
-   - Введите телефон на `/login.php`.
+   - Введите телефон на `/login`.
    - Получите OTP в Telegram.
-   - Введите OTP на `/otp.php`.
+   - Введите OTP на `/otp`.
 
 3. **Работа с автомобилями**
    - `admin`/`manager`: добавление и удаление машин.
@@ -85,7 +87,7 @@ Adminer: http://localhost:8081
    - Удаление переносит запись в `remote_cars`.
 
 4. **Поиск**
-   - Веб: динамический поиск на странице `cars.php`.
+   - Веб: динамический поиск на странице `/cars`.
    - Бот: отправьте номер или его часть.
 
 ## Примечания
