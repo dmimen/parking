@@ -20,8 +20,19 @@ function normalize_phone(string $phone): string
 function normalize_plate(string $number): string
 {
     $clean = preg_replace('/[\s-]+/', '', $number) ?? '';
-    $clean = mb_strtoupper($clean, 'UTF-8');
     $map = [
+        'а' => 'A',
+        'в' => 'B',
+        'е' => 'E',
+        'к' => 'K',
+        'м' => 'M',
+        'н' => 'H',
+        'о' => 'O',
+        'р' => 'P',
+        'с' => 'C',
+        'т' => 'T',
+        'у' => 'Y',
+        'х' => 'X',
         'А' => 'A',
         'В' => 'B',
         'Е' => 'E',
@@ -35,7 +46,8 @@ function normalize_plate(string $number): string
         'У' => 'Y',
         'Х' => 'X',
     ];
-    return strtr($clean, $map);
+    $normalized = strtr($clean, $map);
+    return strtoupper($normalized);
 }
 
 function normalize_plate_sql(string $field): string

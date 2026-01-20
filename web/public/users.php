@@ -93,7 +93,7 @@ ob_start();
                                 <?= csrf_field() ?>
                                 <input type="hidden" name="action" value="toggle_status">
                                 <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                                <button type="button" class="btn btn-outline-secondary btn-sm" data-confirm="statusModal" data-form="toggle-<?= (int) $row['id'] ?>">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#statusModal" data-confirm="statusModal" data-form="toggle-<?= (int) $row['id'] ?>">
                                     <i class="bi bi-shield"></i>
                                     <?= $row['status'] === 'active' ? 'Заблокировать' : 'Разблокировать' ?>
                                 </button>
@@ -103,7 +103,7 @@ ob_start();
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                                    <button type="button" class="btn btn-outline-danger btn-sm" data-confirm="deleteModal" data-form="delete-<?= (int) $row['id'] ?>">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-confirm="deleteModal" data-form="delete-<?= (int) $row['id'] ?>">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>

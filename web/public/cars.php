@@ -93,7 +93,7 @@ ob_start();
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="car_id" value="<?= (int) $car['id'] ?>">
-                                    <button type="button" class="btn btn-outline-danger btn-sm" data-confirm="deleteCarModal" data-form="delete-car-<?= (int) $car['id'] ?>">
+                                    <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCarModal" data-confirm="deleteCarModal" data-form="delete-car-<?= (int) $car['id'] ?>">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
