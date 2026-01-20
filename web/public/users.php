@@ -14,6 +14,11 @@ if ($user['role'] === 'manager') {
     $stmt->execute();
 }
 $users = $stmt->fetchAll();
+$roleLabels = [
+    'admin' => 'Администратор',
+    'manager' => 'Менеджер',
+    'guard' => 'Охрана',
+];
 
 ob_start();
 ?>
@@ -76,7 +81,7 @@ ob_start();
                     <tr>
                         <td><?= htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8') ?></td>
                         <td><?= htmlspecialchars($row['phone'], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td><span class="badge text-bg-light badge-role"><?= htmlspecialchars($row['role'], ENT_QUOTES, 'UTF-8') ?></span></td>
+                        <td><span class="badge text-bg-light badge-role"><?= htmlspecialchars($roleLabels[$row['role']] ?? $row['role'], ENT_QUOTES, 'UTF-8') ?></span></td>
                         <td>
                             <?php if ($row['status'] === 'active'): ?>
                                 <span class="badge text-bg-success">Активен</span>

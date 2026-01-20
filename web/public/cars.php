@@ -46,6 +46,7 @@ ob_start();
     </div>
     <div class="card-body">
         <input type="text" class="form-control" data-car-search placeholder="Введите номер автомобиля">
+        <div class="mt-3" data-search-results></div>
     </div>
 </div>
 

@@ -3,6 +3,13 @@
 /** @var string $current */
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <?php
+    $roleLabels = [
+        'admin' => 'Администратор',
+        'manager' => 'Менеджер',
+        'guard' => 'Охрана',
+    ];
+    ?>
     <div class="container-xl">
         <a class="navbar-brand fw-semibold" href="/index.php">
             <i class="bi bi-p-circle me-2"></i>Парковка ДПОГО
@@ -28,8 +35,8 @@
                     <?php endif; ?>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge text-bg-secondary text-uppercase">
-                        <?= htmlspecialchars($user['role'], ENT_QUOTES, 'UTF-8') ?>
+                    <span class="badge text-bg-secondary">
+                        <?= htmlspecialchars($roleLabels[$user['role']] ?? $user['role'], ENT_QUOTES, 'UTF-8') ?>
                     </span>
                     <span class="text-white-50 small">
                         <?= htmlspecialchars($user['name'] ?? 'Пользователь', ENT_QUOTES, 'UTF-8') ?>

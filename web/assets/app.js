@@ -19,48 +19,37 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateNavbarHeight, 200);
     const searchInput = document.querySelector('[data-car-search]');
     const searchIndicator = document.querySelector('[data-search-indicator]');
-    if (searchInput) {
-        const tableBody = document.querySelector('[data-car-results]');
-        if (!tableBody) {
-            return;
-        }
-        const table = tableBody ? tableBody.closest('table') : null;
-        const hasAdminColumns = table?.dataset.adminColumns === '1';
-        const hasActions = table?.dataset.actions === '1';
-        const defaultRows = tableBody ? tableBody.innerHTML : '';
-
+    const resultsBox = document.querySelector('[data-search-results]');
+    if (searchInput && resultsBox) {
         const runSearch = debounce(async () => {
             const query = searchInput.value.trim();
             if (searchIndicator) {
                 searchIndicator.textContent = query ? 'Поиск…' : '';
             }
             if (!query) {
-                tableBody.innerHTML = defaultRows;
+                resultsBox.innerHTML = '';
                 return;
             }
             const response = await fetch(`/api/cars_search.php?q=${encodeURIComponent(query)}`, { credentials: 'same-origin' });
             if (!response.ok) {
-                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Ошибка загрузки поиска</td></tr>`;
+                resultsBox.innerHTML = '<div class="text-muted">Ошибка загрузки поиска</div>';
                 return;
             }
             if (response.redirected && response.url.includes('/login.php')) {
-                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Требуется повторный вход</td></tr>`;
+                resultsBox.innerHTML = '<div class="text-muted">Требуется повторный вход</div>';
                 return;
             }
             const data = await response.json();
             if (!data.results.length) {
-                tableBody.innerHTML = `<tr><td colspan="${4 + (hasAdminColumns ? 1 : 0) + (hasActions ? 1 : 0)}" class="text-center text-muted py-3">Ничего не найдено</td></tr>`;
+                resultsBox.innerHTML = '<div class="text-muted">Ничего не найдено</div>';
                 return;
             }
-            tableBody.innerHTML = data.results.map(row => `
-                <tr>
-                    <td>${row.car_number}</td>
-                    <td>${row.car_model}</td>
-                    <td>${row.comment || ''}</td>
-                    <td>${row.date_added}</td>
-                    ${hasAdminColumns ? '<td>—</td>' : ''}
-                    ${hasActions ? '<td class="text-end">—</td>' : ''}
-                </tr>
+            resultsBox.innerHTML = data.results.map(row => `
+                <div class="search-result">
+                    <div class="fw-semibold">${row.car_number}</div>
+                    <div class="text-muted small">${row.car_model} • ${row.date_added}</div>
+                    <div class="small">${row.comment || 'Без комментария'}</div>
+                </div>
             `).join('');
         }, 400);
 
