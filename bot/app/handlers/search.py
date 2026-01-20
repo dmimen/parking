@@ -14,7 +14,7 @@ async def search_handler(message: Message, db):
     if len(query) < 2:
         return
     results = await db.fetchall(
-        "SELECT car_model, car_number FROM cars WHERE car_number LIKE %s ORDER BY date_added DESC LIMIT 10",
+        "SELECT car_model, car_number, comment FROM cars WHERE car_number LIKE %s ORDER BY date_added DESC LIMIT 10",
         (f"%{query}%",),
     )
     if not results:
@@ -22,5 +22,6 @@ async def search_handler(message: Message, db):
         return
     lines = []
     for row in results:
-        lines.append(f"{row['car_model']} — {row['car_number']}")
+        comment = row.get("comment") or "-"
+        lines.append(f"{row['car_model']} — {row['car_number']} | {comment}")
     await message.answer("\n".join(lines))
