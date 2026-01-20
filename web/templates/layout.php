@@ -12,17 +12,17 @@
 </head>
 <body>
 <header class="nav">
-    <div class="nav-brand">Parking System</div>
+    <div class="nav-brand">Парковка</div>
     <?php if (!empty($user)): ?>
         <nav class="nav-links">
-            <a href="/cars.php">Cars</a>
+            <a href="/cars.php">Автомобили</a>
             <?php if (can_manage_users($user['role'])): ?>
-                <a href="/users.php">Users</a>
+                <a href="/users.php">Пользователи</a>
             <?php endif; ?>
             <?php if (can_view_remote($user['role'])): ?>
-                <a href="/remote_cars.php">Remote Cars</a>
+                <a href="/remote_cars.php">История удалений</a>
             <?php endif; ?>
-            <a href="/logout.php">Logout</a>
+            <a href="/logout.php">Выход</a>
         </nav>
     <?php endif; ?>
 </header>

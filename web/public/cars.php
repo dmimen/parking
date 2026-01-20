@@ -20,9 +20,9 @@ $cars = $stmt->fetchAll();
 
 ob_start();
 ?>
-<h1>Cars</h1>
+<h1>Автомобили</h1>
 <div class="form-row">
-    <input type="text" data-car-search placeholder="Search by number">
+    <input type="text" data-car-search placeholder="Поиск по номеру">
 </div>
 
 <?php if (can_manage_cars($user['role'])): ?>
@@ -30,10 +30,10 @@ ob_start();
     <?= csrf_field() ?>
     <input type="hidden" name="action" value="create">
     <div class="form-row">
-        <input type="text" name="car_model" placeholder="Model" required>
-        <input type="text" name="car_number" placeholder="Number" required>
-        <input type="text" name="comment" placeholder="Comment">
-        <button type="submit">Add</button>
+        <input type="text" name="car_model" placeholder="Модель" required>
+        <input type="text" name="car_number" placeholder="Номер" required>
+        <input type="text" name="comment" placeholder="Комментарий">
+        <button type="submit">Добавить</button>
     </div>
 </form>
 <?php endif; ?>
@@ -41,12 +41,12 @@ ob_start();
 <table class="table">
     <thead>
         <tr>
-            <th>Number</th>
-            <th>Model</th>
-            <th>Comment</th>
-            <th>Date added</th>
+            <th>Номер</th>
+            <th>Модель</th>
+            <th>Комментарий</th>
+            <th>Добавлен</th>
             <?php if (can_manage_cars($user['role'])): ?>
-                <th>Actions</th>
+                <th>Действия</th>
             <?php endif; ?>
         </tr>
     </thead>
@@ -63,7 +63,7 @@ ob_start();
                             <?= csrf_field() ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="car_id" value="<?= (int) $car['id'] ?>">
-                            <button type="submit">Delete</button>
+                            <button type="submit">Удалить</button>
                         </form>
                     </td>
                 <?php endif; ?>
@@ -73,15 +73,15 @@ ob_start();
 </table>
 
 <div class="form-row">
-    <span class="badge">Page <?= $page ?> / <?= $pages ?></span>
+    <span class="badge">Страница <?= $page ?> / <?= $pages ?></span>
     <?php if ($page > 1): ?>
-        <a href="/cars.php?page=<?= $page - 1 ?>">Prev</a>
+        <a href="/cars.php?page=<?= $page - 1 ?>">Назад</a>
     <?php endif; ?>
     <?php if ($page < $pages): ?>
-        <a href="/cars.php?page=<?= $page + 1 ?>">Next</a>
+        <a href="/cars.php?page=<?= $page + 1 ?>">Вперед</a>
     <?php endif; ?>
 </div>
 <?php
 $content = ob_get_clean();
-$title = 'Cars';
+$title = 'Автомобили';
 require __DIR__ . '/../templates/layout.php';

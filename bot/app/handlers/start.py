@@ -1,4 +1,3 @@
-import re
 from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import Message
@@ -10,34 +9,24 @@ router = Router()
 
 
 def normalize_phone(phone: str) -> str:
-    return re.sub(r"\D+", "", phone)
+    return "".join(ch for ch in phone if ch.isdigit())
 
 
 @router.message(CommandStart())
 async def start_handler(message: Message, db):
     await message.answer(
-        "Отправьте номер телефона для привязки аккаунта.",
+        "Для привязки аккаунта отправьте контакт через кнопку ниже.",
         reply_markup=contact_keyboard(),
     )
 
 
 @router.message(lambda m: m.contact is not None)
 async def contact_handler(message: Message, db):
-    phone = normalize_phone(message.contact.phone_number)
-    user = await db.fetchone("SELECT * FROM users WHERE phone = %s AND status = 'active'", (phone,))
-    if not user:
-        await message.answer("Пользователь не найден или заблокирован.")
+    # Принимаем только контакт владельца (Telegram передает user_id владельца).
+    if message.contact.user_id != message.from_user.id:
+        await message.answer("Нужно отправить свой контакт через кнопку ниже.")
         return
-    await db.execute("UPDATE users SET tg_id = %s WHERE id = %s", (message.from_user.id, user["id"]))
-    await message.answer(
-        f"Привязка выполнена. Роль: {user['role']}",
-        reply_markup=main_menu(can_manage(user["role"])),
-    )
-
-
-@router.message(lambda m: m.text and re.match(r"^\+?\d{7,}", m.text))
-async def phone_text_handler(message: Message, db):
-    phone = normalize_phone(message.text)
+    phone = normalize_phone(message.contact.phone_number)
     user = await db.fetchone("SELECT * FROM users WHERE phone = %s AND status = 'active'", (phone,))
     if not user:
         await message.answer("Пользователь не найден или заблокирован.")

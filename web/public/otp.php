@@ -30,12 +30,12 @@ ob_start();
 <form method="post">
     <?= csrf_field() ?>
     <div class="form-row">
-        <input type="text" name="code" placeholder="OTP" required maxlength="8">
-        <button type="submit">Войти</button>
+        <input type="text" name="code" placeholder="Код из Telegram" required maxlength="8">
+        <button type="submit">Подтвердить</button>
     </div>
 </form>
 <?php
 $content = ob_get_clean();
-$title = 'OTP';
+$title = 'Подтверждение';
 $user = null;
 require __DIR__ . '/../templates/layout.php';

@@ -17,13 +17,13 @@ $users = $stmt->fetchAll();
 
 ob_start();
 ?>
-<h1>Users</h1>
+<h1>Пользователи</h1>
 <form method="post" action="/api/users_crud.php">
     <?= csrf_field() ?>
     <input type="hidden" name="action" value="create">
     <div class="form-row">
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="text" name="phone" placeholder="Phone" required>
+        <input type="text" name="name" placeholder="Имя" required>
+        <input type="text" name="phone" placeholder="Телефон" required>
         <select name="role">
             <?php if ($user['role'] === 'admin'): ?>
                 <option value="admin">admin</option>
@@ -31,18 +31,18 @@ ob_start();
             <option value="manager">manager</option>
             <option value="guard">guard</option>
         </select>
-        <button type="submit">Add</button>
+        <button type="submit">Добавить</button>
     </div>
 </form>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Роль</th>
+            <th>Статус</th>
+            <th>Действия</th>
         </tr>
     </thead>
     <tbody>
@@ -57,14 +57,14 @@ ob_start();
                         <?= csrf_field() ?>
                         <input type="hidden" name="action" value="toggle_status">
                         <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                        <button type="submit">Toggle</button>
+                        <button type="submit">Сменить статус</button>
                     </form>
                     <?php if ($row['id'] !== $user['id']): ?>
                         <form method="post" action="/api/users_crud.php" style="display:inline-block">
                             <?= csrf_field() ?>
                             <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="user_id" value="<?= (int) $row['id'] ?>">
-                            <button type="submit">Delete</button>
+                            <button type="submit">Удалить</button>
                         </form>
                     <?php endif; ?>
                 </td>
@@ -74,5 +74,5 @@ ob_start();
 </table>
 <?php
 $content = ob_get_clean();
-$title = 'Users';
+$title = 'Пользователи';
 require __DIR__ . '/../templates/layout.php';

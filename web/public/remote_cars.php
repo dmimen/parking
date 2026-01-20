@@ -10,15 +10,15 @@ $rows = $stmt->fetchAll();
 
 ob_start();
 ?>
-<h1>Remote Cars</h1>
+<h1>История удалений</h1>
 <table class="table">
     <thead>
         <tr>
-            <th>Number</th>
-            <th>Model</th>
-            <th>Comment</th>
-            <th>Date added</th>
-            <th>Date deleted</th>
+            <th>Номер</th>
+            <th>Модель</th>
+            <th>Комментарий</th>
+            <th>Добавлен</th>
+            <th>Удален</th>
         </tr>
     </thead>
     <tbody>
@@ -35,5 +35,5 @@ ob_start();
 </table>
 <?php
 $content = ob_get_clean();
-$title = 'Remote Cars';
+$title = 'История удалений';
 require __DIR__ . '/../templates/layout.php';

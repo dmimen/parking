@@ -47,6 +47,6 @@ ob_start();
 </form>
 <?php
 $content = ob_get_clean();
-$title = 'Login';
+$title = 'Вход';
 $user = null;
 require __DIR__ . '/../templates/layout.php';
