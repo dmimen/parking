@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d6efd">
+    <title>{{ page_title }}</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow-sm">
+    <div class="container-xl">
+        <a class="navbar-brand fw-semibold" href="/">
+            <i class="bi bi-p-circle me-2"></i>{{ header_name }}
+        </a>
+        {% if user %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-1">
+                <li class="nav-item"><a class="nav-link {% if current=='cars' %}active{% endif %}" href="/cars">Автомобили</a></li>
+                {% if user.role in ['admin','manager'] %}
+                <li class="nav-item"><a class="nav-link {% if current=='users' %}active{% endif %}" href="/users">Пользователи</a></li>
+                {% endif %}
+                {% if user.role == 'admin' %}
+                <li class="nav-item"><a class="nav-link {% if current=='remote' %}active{% endif %}" href="/remote_cars">История удалений</a></li>
+                {% endif %}
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge text-bg-secondary">{{ role_label(user.role) }}</span>
+                <span class="text-white-50 small">{{ user.name }}</span>
+                <a class="btn btn-outline-light btn-sm" href="/logout">Выход</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</nav>
+<main class="main-content">
+    <div class="container-xl py-4">
+        {% if session.flash %}
+            {% for item in session.flash %}
+                <div class="alert alert-{{ item.type }}">{{ item.message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% set _ = session.pop('flash', None) %}
+        {% block content %}{% endblock %}
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/app.js"></script>
+</body>
+</html>
