@@ -41,6 +41,8 @@ Web UI: http://localhost:8082
    - Заполните параметры Web:
      - `WEB_BASE_URL=http://localhost:8082`
      - `WEB_URL=http://example.com` (публичный адрес портала для ссылки в сообщениях бота)
+     - `TITLE=Гости Парка` (текст для `<title>` вкладки браузера)
+     - `HEADER_NAME=Парковка ДПОГО` (название в верхней панели сайта)
      - `APP_SECRET=...`
      - `SESSION_COOKIE_NAME=park_sess`
    - Заполните параметры Bot:
@@ -68,6 +70,11 @@ docker compose up -d --build
    Например, было `"8082:80"`, станет `"8090:80"`.
 2. Перезапустите контейнеры: `docker compose up -d --build`.
 3. Откройте новый адрес: `http://localhost:8090`.
+
+### Фавиконы
+Чтобы заменить иконки, положите файлы в `web/assets`:
+- `favicon.png` (для вкладки браузера)
+- `apple-touch-icon.png` размером 180×180 пикселей (для иконки на iOS)
 
 ## Основные сценарии
 1. **Привязка Telegram**
