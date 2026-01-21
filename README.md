@@ -16,7 +16,7 @@ cp .env.example .env
 - `BOT_TOKEN` — токен бота из BotFather
 - `ADM_PHONE` — телефон администратора (только цифры)
 - `ADM_NAME` — имя администратора
-- `APP_SECRET` — длинный случайный секрет
+- `APP_SECRET` — секрет для подписи сессий; придумайте длинную случайную строку
 
 3. Запустите контейнеры:
 
@@ -40,7 +40,7 @@ Web UI: http://localhost:8082
      - `DB_PORT=3306`
    - Заполните параметры Web:
      - `WEB_BASE_URL=http://localhost:8082`
-     - `WEB_URL=http://parking.dpogo.ru` (публичный адрес портала для ссылки в сообщениях бота)
+     - `WEB_URL=http://example.com` (публичный адрес портала для ссылки в сообщениях бота)
      - `APP_SECRET=...`
      - `SESSION_COOKIE_NAME=park_sess`
    - Заполните параметры Bot:
@@ -62,14 +62,12 @@ docker compose up -d --build
    - Войдите через телефон администратора, получите OTP в Telegram.
 
 ## Дополнительно
-### Adminer (опционально)
-Запуск профиля для отладки БД:
-
-```bash
-docker compose --profile debug up -d
-```
-
-Adminer: http://localhost:8081
+### Смена порта Web UI
+По умолчанию веб-интерфейс доступен на `http://localhost:8082`. Чтобы сменить порт:
+1. Откройте `docker-compose.yml` и замените значение слева от двоеточия в строке `ports` у сервиса `web`.
+   Например, было `"8082:80"`, станет `"8090:80"`.
+2. Перезапустите контейнеры: `docker compose up -d --build`.
+3. Откройте новый адрес: `http://localhost:8090`.
 
 ## Основные сценарии
 1. **Привязка Telegram**

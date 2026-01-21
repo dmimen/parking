@@ -11,8 +11,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./db/init:/docker-entrypoint-initdb.d:ro
-    ports:
-      - "3307:3306"
 
   web:
     build:
@@ -49,14 +47,6 @@ services:
       WEB_URL: ${WEB_URL}
       ADM_PHONE: ${ADM_PHONE}
       ADM_NAME: ${ADM_NAME}
-    depends_on:
-      - db
-
-  adminer:
-    image: adminer:4
-    profiles: ["debug"]
-    ports:
-      - "8083:8080"
     depends_on:
       - db
 

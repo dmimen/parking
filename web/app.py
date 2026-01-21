@@ -183,7 +183,7 @@ def login():
                     elif not user.get("tg_id"):
                         message = "Привяжите Telegram: напишите боту /start и отправьте телефон."
                     else:
-                        code = "".join(secrets.choice("ABCDEFGHJKLMNPQRSTUVWXYZ23456789") for _ in range(8))
+                        code = "".join(secrets.choice("abcdefghjkmnpqrstuvwxyz23456789") for _ in range(8))
                         code_hash = secrets.token_hex(16)
                         cur.execute(
                             "INSERT INTO otp_sessions (user_id, code_hash, expires_at) VALUES (%s, %s, DATE_ADD(NOW(), INTERVAL 60 SECOND))",
