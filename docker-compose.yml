@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:11
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+
+  web:
+    build:
+      context: ./web
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      WEB_BASE_URL: ${WEB_BASE_URL}
+      TITLE: ${TITLE}
+      HEADER_NAME: ${HEADER_NAME}
+      APP_SECRET: ${APP_SECRET}
+      SESSION_COOKIE_NAME: ${SESSION_COOKIE_NAME}
+      ADM_PHONE: ${ADM_PHONE}
+      ADM_NAME: ${ADM_NAME}
+    volumes:
+      - ./web:/app
+    ports:
+      - "8082:80"
+    depends_on:
+      - db
+
+  bot:
+    build:
+      context: ./bot
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_PORT: ${DB_PORT}
+      APP_SECRET: ${APP_SECRET}
+      BOT_TOKEN: ${BOT_TOKEN}
+      WEB_URL: ${WEB_URL}
+      ADM_PHONE: ${ADM_PHONE}
+      ADM_NAME: ${ADM_NAME}
+    depends_on:
+      - db
+
+volumes:
+  db_data:

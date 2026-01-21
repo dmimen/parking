@@ -1,4 +1,3 @@
-
 # Parking System (Flask + Aiogram + MariaDB)
 
 ## Требования
