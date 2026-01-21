@@ -78,6 +78,23 @@ body {
     touch-action: manipulation;
 }
 
+.keypad-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(64px, 1fr);
+    gap: 0.5rem;
+}
+
+.keypad-grid .keypad-backspace {
+    grid-column: 6;
+    grid-row: 1 / span 2;
+}
+
+@media (max-width: 576px) {
+    .keypad-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(56px, 0.8fr);
+    }
+}
+
 @media (max-width: 1024px) {
     .navbar .container-xl {
         padding-left: 16px;
