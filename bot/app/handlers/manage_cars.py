@@ -13,6 +13,14 @@ async def get_user(db, tg_id: int):
     return await db.fetchone("SELECT * FROM users WHERE tg_id = %s AND status = 'active'", (tg_id,))
 
 
+async def cancel_flow(message: Message, state: FSMContext, db) -> None:
+    await state.clear()
+    user = await get_user(db, message.from_user.id)
+    if not user:
+        return
+    await message.answer("Действие отменено.", reply_markup=main_menu(can_manage(user["role"])))
+
+
 @router.message(F.text == "Добавить автомобиль")
 async def add_car_start(message: Message, state: FSMContext, db):
     user = await get_user(db, message.from_user.id)
@@ -23,9 +31,9 @@ async def add_car_start(message: Message, state: FSMContext, db):
 
 
 @router.message(AddCar.model)
-async def add_car_model(message: Message, state: FSMContext):
+async def add_car_model(message: Message, state: FSMContext, db):
     if message.text == "Отмена":
-        await state.clear()
+        await cancel_flow(message, state, db)
         return
     await state.update_data(car_model=message.text.strip())
     await state.set_state(AddCar.number)
@@ -33,9 +41,9 @@ async def add_car_model(message: Message, state: FSMContext):
 
 
 @router.message(AddCar.number)
-async def add_car_number(message: Message, state: FSMContext):
+async def add_car_number(message: Message, state: FSMContext, db):
     if message.text == "Отмена":
-        await state.clear()
+        await cancel_flow(message, state, db)
         return
     await state.update_data(car_number=normalize_plate(message.text))
     await state.set_state(AddCar.comment)
@@ -45,7 +53,7 @@ async def add_car_number(message: Message, state: FSMContext):
 @router.message(AddCar.comment)
 async def add_car_comment(message: Message, state: FSMContext, db):
     if message.text == "Отмена":
-        await state.clear()
+        await cancel_flow(message, state, db)
         return
     data = await state.get_data()
     user = await get_user(db, message.from_user.id)
@@ -75,7 +83,7 @@ async def delete_car_start(message: Message, state: FSMContext, db):
 @router.message(DeleteCar.query)
 async def delete_car_query(message: Message, state: FSMContext, db):
     if message.text == "Отмена":
-        await state.clear()
+        await cancel_flow(message, state, db)
         return
     query = normalize_plate(message.text)
     results = await db.fetchall(
