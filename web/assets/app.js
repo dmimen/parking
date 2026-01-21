@@ -26,6 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const hasActions = table?.dataset.actions === '1';
     const csrfToken = table?.dataset.csrf;
     const defaultRows = tableBody ? tableBody.innerHTML : '';
+    const digitButtons = document.querySelector('[data-digit-buttons]');
+    const normalizePlate = (value) => {
+        const cleaned = value.replace(/[\s-]+/g, '');
+        const map = {
+            а: 'A',
+            в: 'B',
+            е: 'E',
+            к: 'K',
+            м: 'M',
+            н: 'H',
+            о: 'O',
+            р: 'P',
+            с: 'C',
+            т: 'T',
+            у: 'Y',
+            х: 'X',
+        };
+        return cleaned
+            .split('')
+            .map((ch) => {
+                const lower = ch.toLowerCase();
+                if (map[lower]) {
+                    return map[lower];
+                }
+                return ch;
+            })
+            .join('')
+            .toUpperCase();
+    };
+    const splitPlateRegion = (plate) => {
+        const normalized = normalizePlate(plate);
+        const match = normalized.match(/(\d+)$/);
+        if (!match) {
+            return { main: normalized, region: '' };
+        }
+        const region = match[1];
+        return { main: normalized.slice(0, -region.length), region };
+    };
     if (searchInput && resultsBox && tableBody) {
         const runSearch = debounce(() => {
             const query = searchInput.value.trim();
@@ -67,13 +105,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     tableBody.innerHTML = '';
                     return;
                 }
-                resultsBox.innerHTML = data.results.map(row => `
+                const normalizedQuery = normalizePlate(query);
+                const filteredResults = normalizedQuery && /^\d+$/.test(normalizedQuery)
+                    ? data.results.filter((row) => {
+                        const { main, region } = splitPlateRegion(row.car_number);
+                        return !(region.includes(normalizedQuery) && !main.includes(normalizedQuery));
+                    })
+                    : data.results;
+
+                resultsBox.innerHTML = filteredResults.length
+                    ? filteredResults.map(row => `
                     <div class="search-result">
                         <div class="fw-semibold">${row.car_model}</div>
                         <div>${row.car_number}</div>
                         <div class="text-muted">${row.comment || '-'}</div>
                     </div>
-                `).join('');
+                `).join('')
+                    : '<div class="text-muted">Ничего не найдено</div>';
                 const deleteCell = (row) => {
                     if (!hasActions || !row.id) {
                         return '';
@@ -112,13 +160,22 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('input', runSearch);
         searchInput.addEventListener('keyup', runSearch);
 
-        document.querySelectorAll('[data-digit]').forEach((button) => {
-            button.addEventListener('click', () => {
-                searchInput.value = `${searchInput.value}${button.dataset.digit || ''}`;
+        if (digitButtons) {
+            digitButtons.addEventListener('click', (event) => {
+                const button = event.target.closest('button');
+                if (!button) {
+                    return;
+                }
+                if (button.dataset.action === 'backspace') {
+                    searchInput.value = searchInput.value.slice(0, -1);
+                } else if (button.dataset.digit) {
+                    searchInput.value = `${searchInput.value}${button.dataset.digit || ''}`;
+                } else {
+                    return;
+                }
                 searchInput.dispatchEvent(new Event('input'));
-                searchInput.focus();
             });
-        });
+        }
     }
 
     document.addEventListener('click', (event) => {

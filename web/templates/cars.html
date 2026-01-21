@@ -19,10 +19,17 @@
     </div>
     <div class="card-body">
         <input type="text" class="form-control" data-car-search placeholder="Введите номер автомобиля">
-        <div class="d-flex flex-wrap gap-2 mt-3" data-digit-buttons>
+        <div class="row g-2 mt-3" data-digit-buttons>
             {% for digit in ['1','2','3','4','5','6','7','8','9','0'] %}
-                <button type="button" class="btn btn-outline-secondary btn-sm" data-digit="{{ digit }}">{{ digit }}</button>
+                <div class="col-4 col-sm-2">
+                    <button type="button" class="btn btn-outline-secondary btn-lg w-100" data-digit="{{ digit }}">{{ digit }}</button>
+                </div>
             {% endfor %}
+            <div class="col-4 col-sm-2">
+                <button type="button" class="btn btn-outline-secondary btn-lg w-100" data-action="backspace" aria-label="Удалить символ">
+                    <i class="bi bi-backspace"></i>
+                </button>
+            </div>
         </div>
         <div class="mt-3" data-search-results></div>
     </div>
