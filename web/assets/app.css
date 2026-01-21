@@ -74,6 +74,10 @@ body {
     margin-bottom: 10px;
 }
 
+[data-digit-buttons] button {
+    touch-action: manipulation;
+}
+
 @media (max-width: 1024px) {
     .navbar .container-xl {
         padding-left: 16px;
