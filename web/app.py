@@ -3,7 +3,7 @@ import secrets
 from datetime import datetime, timedelta
 
 import pymysql
-from flask import Flask, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, Response, jsonify, json, redirect, render_template, request, session, url_for
 from openpyxl import load_workbook
 
 app = Flask(__name__, static_folder="assets", static_url_path="/assets", template_folder="templates")
@@ -169,6 +169,23 @@ def index():
     if user["role"] == "admin":
         return redirect(url_for("users"))
     return redirect(url_for("cars"))
+
+
+@app.route("/manifest.webmanifest")
+def manifest():
+    data = {
+        "name": "Parking",
+        "short_name": "Parking",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#0b1220",
+        "theme_color": "#0b1220",
+        "icons": [
+            {"src": "/assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
+            {"src": "/assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
+        ],
+    }
+    return Response(json.dumps(data), mimetype="application/manifest+json")
 
 
 @app.route("/login", methods=["GET", "POST"])
