@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const table = tableBody ? tableBody.closest('table') : null;
     const isAdmin = table?.dataset.admin === '1';
     const hasActions = table?.dataset.actions === '1';
+    const csrfToken = table?.dataset.csrf;
     const defaultRows = tableBody ? tableBody.innerHTML : '';
     if (searchInput && resultsBox && tableBody) {
         const runSearch = debounce(() => {
@@ -73,6 +74,27 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="text-muted">${row.comment || '-'}</div>
                     </div>
                 `).join('');
+                const deleteCell = (row) => {
+                    if (!hasActions || !row.id) {
+                        return '';
+                    }
+                    if (!csrfToken) {
+                        return '<td class="text-end">—</td>';
+                    }
+                    return `
+                        <td class="text-end">
+                            <form id="delete-car-${row.id}" method="post" action="/api/cars" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="${csrfToken}">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="car_id" value="${row.id}">
+                                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteCarModal" data-confirm="deleteCarModal" data-form="delete-car-${row.id}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    `;
+                };
+
                 tableBody.innerHTML = data.results.map(row => `
                     <tr>
                         <td>${row.car_number}</td>
@@ -80,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td>${row.comment || ''}</td>
                         ${isAdmin ? `<td>${row.date_added}</td>` : ''}
                         ${isAdmin ? '<td>—</td>' : ''}
-                        ${hasActions ? '<td class="text-end">—</td>' : ''}
+                        ${hasActions ? deleteCell(row) : ''}
                     </tr>
                 `).join('');
             };
@@ -89,23 +111,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         searchInput.addEventListener('input', runSearch);
         searchInput.addEventListener('keyup', runSearch);
-    }
 
-    document.querySelectorAll('[data-confirm]')
-        .forEach((button) => {
-            button.addEventListener('click', (event) => {
-                const modalId = button.dataset.confirm;
-                const modal = document.getElementById(modalId);
-                if (!modal) {
-                    return;
-                }
-                const formId = button.dataset.form;
-                const form = document.getElementById(formId);
-                const confirmButton = modal.querySelector('[data-confirm-submit]');
-                if (confirmButton && form) {
-                    confirmButton.onclick = () => form.submit();
-                }
+        document.querySelectorAll('[data-digit]').forEach((button) => {
+            button.addEventListener('click', () => {
+                searchInput.value = `${searchInput.value}${button.dataset.digit || ''}`;
+                searchInput.dispatchEvent(new Event('input'));
+                searchInput.focus();
             });
         });
+    }
+
+    document.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-confirm]');
+        if (!button) {
+            return;
+        }
+        const modalId = button.dataset.confirm;
+        const modal = document.getElementById(modalId);
+        if (!modal) {
+            return;
+        }
+        const formId = button.dataset.form;
+        const form = document.getElementById(formId);
+        const confirmButton = modal.querySelector('[data-confirm-submit]');
+        if (confirmButton && form) {
+            confirmButton.onclick = () => form.submit();
+        }
+    });
     window.addEventListener('resize', updateNavbarHeight);
 });

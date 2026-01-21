@@ -1,4 +1,5 @@
 import os
+import re
 import secrets
 from datetime import datetime, timedelta
 
@@ -84,6 +85,16 @@ def normalize_plate_sql(field: str) -> str:
     for src, dst in mapping.items():
         expr = f"REPLACE({expr}, '{src}', '{dst}')"
     return expr
+
+
+def split_plate_region(number: str) -> tuple[str, str]:
+    normalized = normalize_plate(number)
+    match = re.search(r"(\d+)$", normalized)
+    if not match:
+        return normalized, ""
+    region = match.group(1)
+    main = normalized[: -len(region)]
+    return main, region
 
 
 def role_label(role: str) -> str:
@@ -308,10 +319,18 @@ def api_cars_search():
     expr = normalize_plate_sql("car_number")
     with db().cursor() as cur:
         cur.execute(
-            f"SELECT car_number, car_model, comment, date_added FROM cars WHERE {expr} LIKE %s ORDER BY date_added DESC LIMIT 20",
+            f"SELECT id, car_number, car_model, comment, date_added FROM cars WHERE {expr} LIKE %s ORDER BY date_added DESC LIMIT 20",
             (f"%{q}%",),
         )
         rows = cur.fetchall()
+    if q.isdigit():
+        filtered = []
+        for row in rows:
+            main_part, region = split_plate_region(row["car_number"])
+            if q in region and q not in main_part:
+                continue
+            filtered.append(row)
+        rows = filtered
     return jsonify({"results": rows})
 
 
