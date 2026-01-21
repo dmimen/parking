@@ -151,8 +151,8 @@ def inject_globals():
     return {
         "role_label": role_label,
         "csrf_token": csrf_token,
-        "page_title": os.getenv("TITLE", "Гости Парка"),
-        "header_name": os.getenv("HEADER_NAME", "Парковка ДПОГО"),
+        "page_title": os.getenv("TITLE", "Parking"),
+        "header_name": os.getenv("HEADER_NAME", "Parking"),
     }
 
 

@@ -41,8 +41,8 @@ Web UI: http://localhost:8082
    - Заполните параметры Web:
      - `WEB_BASE_URL=http://localhost:8082`
      - `WEB_URL=http://example.com` (публичный адрес портала для ссылки в сообщениях бота)
-     - `TITLE=Гости Парка` (текст для `<title>` вкладки браузера)
-     - `HEADER_NAME=Парковка ДПОГО` (название в верхней панели сайта)
+     - `TITLE=Parking` (текст для `<title>` вкладки браузера)
+     - `HEADER_NAME=Parking` (название в верхней панели сайта)
      - `APP_SECRET=...`
      - `SESSION_COOKIE_NAME=park_sess`
    - Заполните параметры Bot:
