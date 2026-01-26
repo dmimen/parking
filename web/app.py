@@ -104,7 +104,7 @@ def current_user():
     if not user_id:
         return None
     with db().cursor() as cur:
-        cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+        cur.execute("SELECT * FROM users WHERE id=%s AND status='active'", (user_id,))
         return cur.fetchone()
 
 
@@ -379,6 +379,14 @@ def users_crud():
             if target and not (user["role"] == "manager" and target["role"] == "admin"):
                 cur.execute("DELETE FROM users WHERE id=%s", (target_id,))
     return redirect(url_for("users"))
+
+
+@app.route("/api/session_check")
+def session_check():
+    user = current_user()
+    if not user:
+        return ("", 401)
+    return ("", 200)
 
 
 @app.route("/api/cars", methods=["POST"])
