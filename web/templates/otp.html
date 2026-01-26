@@ -5,7 +5,10 @@
         <div class="card">
             <div class="card-body p-4">
                 <h1 class="h4 mb-2">Подтверждение</h1>
-                <p class="text-muted mb-4">Введите код из Telegram. Он действует 60 секунд.</p>
+                <p class="text-muted mb-4">
+                    Введите код из Telegram. Он действует 60 секунд.
+                    <span class="d-block mt-2 text-secondary" data-otp-timer></span>
+                </p>
                 {% if message %}
                     <div class="alert alert-warning">{{ message }}</div>
                 {% endif %}
@@ -21,4 +24,26 @@
         </div>
     </div>
 </div>
+<script>
+    (() => {
+        const timerEl = document.querySelector('[data-otp-timer]');
+        if (!timerEl) {
+            return;
+        }
+        let remaining = 60;
+        const render = () => {
+            timerEl.textContent = `Осталось ${remaining} сек.`;
+        };
+        render();
+        const interval = setInterval(() => {
+            remaining -= 1;
+            if (remaining <= 0) {
+                clearInterval(interval);
+                window.location.assign('/login');
+                return;
+            }
+            render();
+        }, 1000);
+    })();
+</script>
 {% endblock %}
