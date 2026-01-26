@@ -83,11 +83,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 if (xhr.status === 401) {
-                    window.location.assign('/login');
+                    if (!['/login', '/otp'].includes(window.location.pathname)) {
+                        window.location.assign('/login');
+                    }
                     return;
                 }
                 if (xhr.status >= 300 && xhr.status < 400) {
-                    window.location.assign('/login');
+                    if (!['/login', '/otp'].includes(window.location.pathname)) {
+                        window.location.assign('/login');
+                    }
                     return;
                 }
                 if (xhr.status !== 200) {
@@ -218,6 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.assign(href);
     });
     const sessionPoll = () => {
+        if (['/login', '/otp'].includes(window.location.pathname)) {
+            return;
+        }
         fetch('/api/session_check', { credentials: 'same-origin' })
             .then((response) => {
                 if (response.status === 401) {
