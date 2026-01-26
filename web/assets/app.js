@@ -82,9 +82,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (xhr.readyState !== 4) {
                     return;
                 }
+                if (xhr.status === 401) {
+                    if (!['/login', '/otp'].includes(window.location.pathname)) {
+                        window.location.assign('/login');
+                    }
+                    return;
+                }
                 if (xhr.status >= 300 && xhr.status < 400) {
-                    resultsBox.innerHTML = '<div class="text-muted">Требуется повторный вход</div>';
-                    tableBody.innerHTML = defaultRows;
+                    if (!['/login', '/otp'].includes(window.location.pathname)) {
+                        window.location.assign('/login');
+                    }
                     return;
                 }
                 if (xhr.status !== 200) {
@@ -214,5 +221,19 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         window.location.assign(href);
     });
+    const sessionPoll = () => {
+        if (['/login', '/otp'].includes(window.location.pathname)) {
+            return;
+        }
+        fetch('/api/session_check', { credentials: 'same-origin' })
+            .then((response) => {
+                if (response.status === 401) {
+                    window.location.assign('/login');
+                }
+            })
+            .catch(() => {});
+    };
+    sessionPoll();
+    setInterval(sessionPoll, 60000);
     window.addEventListener('resize', updateNavbarHeight);
 });
