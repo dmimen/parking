@@ -381,6 +381,14 @@ def users_crud():
     return redirect(url_for("users"))
 
 
+@app.route("/api/session_check")
+def session_check():
+    user = current_user()
+    if not user:
+        return ("", 401)
+    return ("", 200)
+
+
 @app.route("/api/cars", methods=["POST"])
 def cars_crud():
     user = require_login()
